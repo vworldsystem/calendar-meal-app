@@ -1,30 +1,30 @@
-<!-- ³¯Â¥/¿äÀÏ Ç¥½Ã ¿µ¿ª -->
+<!-- ë‚ ì§œ/ìš”ì¼ í‘œì‹œ ì˜ì—­ -->
 <div id="date-container" style="font-size: 1.5em; margin-bottom: 20px; color: #333;">
   <span id="today" style="font-weight: bold;"></span>
   <span id="weekday" style="margin-left: 8px; color: #777;"></span>
 </div>
 
-<!-- ¹öÆ° ½ºÅ¸ÀÏ ½Ä±Ç ³¯Â¥ ¼±ÅÃ -->
+<!-- ë²„íŠ¼ ìŠ¤íƒ€ì¼ ì‹ê¶Œ ë‚ ì§œ ì„ íƒ -->
 <div id="date-buttons" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
-  <button class="date-btn" data-date="2025-04-26">4/26 (Åä)</button>
-  <button class="date-btn" data-date="2025-04-27">4/27 (ÀÏ)</button>
-  <button class="date-btn" data-date="2025-04-28">4/28 (¿ù)</button>
+  <button class="date-btn" data-date="2025-04-26">4/26 (í† )</button>
+  <button class="date-btn" data-date="2025-04-27">4/27 (ì¼)</button>
+  <button class="date-btn" data-date="2025-04-28">4/28 (ì›”)</button>
 </div>
 
-<!-- Ä¶¸°´õ ÀÔ·ÂÃ¢ (Ãß°¡ ¼±ÅÃ¿ë) -->
+<!-- ìº˜ë¦°ë” ì…ë ¥ì°½ (ì¶”ê°€ ì„ íƒìš©) -->
 <input type="date" id="date-picker" style="padding: 8px 12px; font-size: 1em; border: 1px solid #ccc; border-radius: 8px;">
 
 <script>
-  // ³¯Â¥ ¹®ÀÚ¿­ ¾ÈÀüÇÏ°Ô º¯È¯
+  // ë‚ ì§œ ë¬¸ìì—´ ì•ˆì „í•˜ê²Œ ë³€í™˜
   function parseDateString(dateString) {
     const [year, month, day] = dateString.split('-').map(Number);
     return new Date(year, month - 1, day);
   }
 
-  // ³¯Â¥ + ¿äÀÏ ¾÷µ¥ÀÌÆ®
+  // ë‚ ì§œ + ìš”ì¼ ì—…ë°ì´íŠ¸
   function updateDateDisplay(dateString) {
     const date = parseDateString(dateString);
-    const dayList = ['ÀÏ', '¿ù', 'È­', '¼ö', '¸ñ', '±İ', 'Åä'];
+    const dayList = ['ì¼', 'ì›”', 'í™”', 'ìˆ˜', 'ëª©', 'ê¸ˆ', 'í† '];
 
     const formattedDate = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
     const weekday = `(${dayList[date.getDay()]})`;
@@ -32,7 +32,7 @@
     document.getElementById('today').innerText = formattedDate;
     document.getElementById('weekday').innerText = weekday;
 
-    // ¹öÆ° ¼±ÅÃ »óÅÂ °»½Å
+    // ë²„íŠ¼ ì„ íƒ ìƒíƒœ ê°±ì‹ 
     document.querySelectorAll('.date-btn').forEach(btn => {
       if (btn.dataset.date === dateString) {
         btn.classList.add('active');
@@ -42,7 +42,7 @@
     });
   }
 
-  // ¿À´Ã ³¯Â¥ ±âº» Ç¥½Ã
+  // ì˜¤ëŠ˜ ë‚ ì§œ ê¸°ë³¸ í‘œì‹œ
   function setToday() {
     const now = new Date();
     const year = now.getFullYear();
@@ -52,11 +52,11 @@
 
     updateDateDisplay(todayStr);
 
-    // Ä¶¸°´õ ±âº»°ª ¼¼ÆÃ
+    // ìº˜ë¦°ë” ê¸°ë³¸ê°’ ì„¸íŒ…
     document.getElementById('date-picker').value = todayStr;
   }
 
-  // ÀÚÁ¤ Áö³ª¸é ÀÚµ¿À¸·Î ³¯Â¥ °»½Å
+  // ìì • ì§€ë‚˜ë©´ ìë™ìœ¼ë¡œ ë‚ ì§œ ê°±ì‹ 
   function setupMidnightUpdater() {
     const now = new Date();
     const msUntilMidnight = 
@@ -68,7 +68,7 @@
     }, msUntilMidnight);
   }
 
-  // ÀÌº¥Æ® ¿¬°á
+  // ì´ë²¤íŠ¸ ì—°ê²°
   document.querySelectorAll('.date-btn').forEach(btn => {
     btn.addEventListener('click', function() {
       const selectedDate = this.dataset.date;
@@ -84,7 +84,7 @@
     }
   });
 
-  // ÆäÀÌÁö ·Îµå ½Ã ½ÇÇà
+  // í˜ì´ì§€ ë¡œë“œ ì‹œ ì‹¤í–‰
   setToday();
   setupMidnightUpdater();
 </script>
