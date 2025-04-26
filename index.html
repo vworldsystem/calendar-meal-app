@@ -24,14 +24,20 @@
 </div>
 
 <script>
-  // 날짜 문자열 안전하게 변환
+  const mealStatus = {}; // 날짜별 식권 사용 상태 저장
+  let currentDate = "";
+
   function parseDateString(dateString) {
     const [year, month, day] = dateString.split('-').map(Number);
     return new Date(year, month - 1, day);
   }
 
-  // 날짜 + 요일 업데이트
   function updateDateDisplay(dateString) {
+    // 이전 날짜 기록 저장
+    if (currentDate) {
+      saveMealStatus(currentDate);
+    }
+
     const date = parseDateString(dateString);
     const dayList = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -41,7 +47,6 @@
     document.getElementById('today').innerText = formattedDate;
     document.getElementById('weekday').innerText = weekday;
 
-    // 버튼 활성화 표시
     document.querySelectorAll('.date-btn').forEach(btn => {
       if (btn.dataset.date === dateString) {
         btn.classList.add('active');
@@ -50,36 +55,37 @@
       }
     });
 
-    // 식권 상태 초기화
-    resetMeals();
-  }
-
-  // 오늘 날짜 설정
-  function setToday() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const todayStr = `${year}-${month}-${day}`;
-
-    updateDateDisplay(todayStr);
-
-    document.getElementById('date-picker').value = todayStr;
-  }
-
-  // 식권 버튼 상태 초기화
-  function resetMeals() {
-    document.querySelectorAll('.meal-btn').forEach(btn => btn.classList.remove('active'));
+    // 새로운 날짜로 변경
+    currentDate = dateString;
+    restoreMealStatus(currentDate);
     updateMealCount();
   }
 
-  // 식권 수 업데이트
+  function saveMealStatus(dateString) {
+    const selectedMeals = [];
+    document.querySelectorAll('.meal-btn.active').forEach(btn => {
+      selectedMeals.push(btn.dataset.meal);
+    });
+    mealStatus[dateString] = selectedMeals;
+  }
+
+  function restoreMealStatus(dateString) {
+    const selectedMeals = mealStatus[dateString] || [];
+
+    document.querySelectorAll('.meal-btn').forEach(btn => {
+      if (selectedMeals.includes(btn.dataset.meal)) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+  }
+
   function updateMealCount() {
     const used = document.querySelectorAll('.meal-btn.active').length;
     document.getElementById('meal-count').innerText = `오늘 사용한 식권: ${used}개`;
   }
 
-  // 이벤트 연결
   document.querySelectorAll('.date-btn').forEach(btn => {
     btn.addEventListener('click', function() {
       const selectedDate = this.dataset.date;
@@ -93,6 +99,16 @@
       updateMealCount();
     });
   });
+
+  function setToday() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const todayStr = `${year}-${month}-${day}`;
+
+    updateDateDisplay(todayStr);
+  }
 
   setToday();
 </script>
